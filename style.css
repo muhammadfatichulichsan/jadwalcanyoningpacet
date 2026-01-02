@@ -1,0 +1,268 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  color: #1f2933;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background: #ffffff;
+}
+
+.navbar nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(rgba(0, 120, 110, 0.9), rgba(0, 120, 110, 0.9)),
+              url("images/hero.jpg") center/cover;
+  color: white;
+  padding: 80px 60px;
+}
+
+.hero-content {
+  max-width: 900px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.date {
+  display: block;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background: #facc15;
+  color: #000;
+  padding: 12px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.stats div strong {
+  font-size: 28px;
+}
+
+.stats div span {
+  display: block;
+  font-size: 14px;
+}
+
+/* SECTIONS */
+.section {
+  padding: 70px 60px;
+}
+
+.section.alt {
+  background: #f9fafb;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.content.reverse {
+  flex-direction: row-reverse;
+}
+
+.text h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.text ul li {
+  margin-bottom: 10px;
+}
+
+.section img {
+  width: 420px;
+  border-radius: 12px;
+}
+
+/* CTA */
+.cta {
+  background: #0f766e;
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.cta h2 {
+  margin-bottom: 20px;
+}
+
+/* FOOTER */
+footer {
+  background: #111827;
+  color: white;
+  padding: 40px 60px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+footer a {
+  color: #d1d5db;
+  text-decoration: none;
+  margin-left: 15px;
+  font-size: 14px;
+}
+
+copyright {
+  margin-top: 20px;
+  font-size: 12px;
+}
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 20px 30px;
+  }
+
+  .hero {
+    padding: 60px 30px;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+    gap: 25px;
+  }
+
+  .content {
+    gap: 30px;
+  }
+
+  .section img {
+    width: 350px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  /* NAVBAR */
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .navbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 50px 20px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .stats {
+    justify-content: center;
+  }
+
+  .stats div strong {
+    font-size: 24px;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 50px 20px;
+  }
+
+  .content,
+  .content.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .text h2 {
+    font-size: 26px;
+  }
+
+  .section img {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  /* CTA */
+  .cta h2 {
+    font-size: 22px;
+  }
+
+  /* FOOTER */
+  .footer-content {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  footer a {
+    margin: 0 10px;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 26px;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
