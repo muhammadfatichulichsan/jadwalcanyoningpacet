@@ -178,6 +178,7 @@
             padding: 30px; border-radius: 16px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             animation: slideUp 0.3s;
+            max-height: 90vh; overflow-y: auto;
         }
         .modal-box h3 { color: var(--brand-red); margin-bottom: 20px; }
         .modal-box input, .modal-box textarea {
@@ -186,6 +187,38 @@
         }
         .modal-box input:focus, .modal-box textarea:focus {
             outline: none; border-color: var(--brand-green);
+        }
+
+        /* Style Tambahan untuk Summary Pembayaran */
+        .payment-summary {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .summary-row {
+            display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;
+        }
+        
+        /* Style Khusus DP Row */
+        .summary-dp-row {
+            border-top: 1px dashed #ccc;
+            margin-top: 10px; padding-top: 10px;
+            display: flex; justify-content: space-between;
+            font-weight: 800; font-size: 1.1rem; color: var(--brand-red);
+            background-color: #fff5f5;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ffebeb;
+        }
+        .text-full-price {
+            font-size: 0.9rem; color: #666; text-decoration: none;
+        }
+
+        .bank-info {
+            background: #e7f5ea; border-left: 4px solid var(--brand-green);
+            padding: 10px; font-size: 0.9rem; margin-top: 15px; border-radius: 4px;
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -284,7 +317,7 @@
                     
                     <div class="text-center mb-5">
                         <h1 class="display-4 mb-2 fw-bold">JADWAL OPEN TRIP</h1>
-                        <p class="text-muted fs-5">Informasi ketersediaan slot trip Canyoning Pacet.</p>
+                        <p class="text-muted fs-5">Informasi ketersediaan slot Open Trip Canyoning Pacet.</p>
                     </div>
 
                     <div class="schedule-card">
@@ -310,7 +343,8 @@
                                 <tbody id="tableBody"></tbody>
                             </table>
                         </div>
-                         <div class="text-center">
+
+                        <div class="text-center">
                             <button id="btnExport" class="btn-export d-none">
                                 📸 Download Poster
                             </button>
@@ -323,30 +357,94 @@
 
     <div id="modalBackdrop" class="backdrop">
         <div class="modal-box">
-            <h3 class="fw-bold">FORMULIR BOOKING</h3>
-            <div id="selectedDateText" class="text-muted small mb-3 pb-2 border-bottom" style="font-family: var(--font-tech);"></div>
             
-            <label class="small fw-bold text-muted">Nama Lengkap</label>
-            <input type="text" id="inputName" placeholder="Masukkan nama pemesan">
+            <div id="stepForm">
+                <h3 class="fw-bold">FORMULIR BOOKING</h3>
+                <div id="selectedDateText" class="text-muted small mb-3 pb-2 border-bottom" style="font-family: var(--font-tech);"></div>
+                
+                <label class="small fw-bold text-muted">Nama Lengkap</label>
+                <input type="text" id="inputName" placeholder="Masukkan nama pemesan">
 
-            <div class="row g-2 mt-2">
-                <div class="col-6">
-                    <label class="small fw-bold text-muted">Jumlah Pax</label>
-                    <input type="number" id="inputQty" min="1" value="1">
+                <div class="row g-2 mt-2">
+                    <div class="col-6">
+                        <label class="small fw-bold text-muted">Jumlah Pax</label>
+                        <input type="number" id="inputQty" min="1" value="1">
+                    </div>
+                    <div class="col-6">
+                        <label class="small fw-bold text-muted">No.WhatsApp</label>
+                        <input type="text" id="inputPhone"  placeholder="08xx...">
+                    </div>
                 </div>
-                <div class="col-6">
-                    <label class="small fw-bold text-muted">No.WhatsApp</label>
-                    <input type="text" id="inputPhone"  placeholder="08xx...">
+
+                <div class="mt-2 p-2 bg-light rounded border border-light">
+                    <label class="small fw-bold text-muted d-block mb-1">Sewa Sepatu (Rp 15.000/psg)</label>
+                    <div class="d-flex align-items-center gap-2">
+                         <input type="number" id="inputShoeQty" class="form-control" min="0" value="0" placeholder="0">
+                         <span class="small text-muted text-nowrap">Pasang</span>
+                    </div>
+                    <small class="text-muted" style="font-size:0.75rem;">*Kosongi jika bawa sendiri</small>
+                </div>
+
+                <label class="small fw-bold text-muted mt-2">Catatan (Opsional)</label>
+                <textarea id="inputNote" rows="2" placeholder="Contoh: Request sepatu size 42..."></textarea>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button id="btnCancel" class="btn btn-light rounded-pill px-4 fw-bold">Batal</button>
+                    <button id="btnGoToPayment" class="btn btn-danger rounded-pill px-4 fw-bold" style="background:var(--brand-red); color:#fff;">Lanjut Bayar</button>
                 </div>
             </div>
 
-            <label class="small fw-bold text-muted mt-2">Catatan (Opsional)</label>
-            <textarea id="inputNote" rows="2" placeholder="Contoh: Request sepatu size 42..."></textarea>
+            <div id="stepPayment" style="display:none;">
+                <h3 class="fw-bold">RINCIAN PEMBAYARAN</h3>
+                <p class="small text-muted">Mohon periksa pesanan Anda sebelum konfirmasi.</p>
 
-            <div class="d-flex justify-content-end gap-2 mt-4">
-                <button id="btnCancel" class="btn btn-light rounded-pill px-4 fw-bold">Batal</button>
-                <button id="btnSend" class="btn btn-danger rounded-pill px-4 fw-bold" style="background:var(--brand-red); color:#fff;">Kirim Booking</button>
+                <div class="payment-summary">
+                    <div class="summary-row">
+                        <span>Layanan:</span>
+                        <span class="fw-bold">Open Trip Canyoning Cowang</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tanggal:</span>
+                        <span id="summaryDate" class="fw-bold">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Peserta:</span>
+                        <span id="summaryPax" class="fw-bold">-</span>
+                    </div>
+                    <div class="summary-row" id="summaryShoeRow" style="display:none; color:#d35400;">
+                        <span>Sewa Sepatu:</span>
+                        <span id="summaryShoeValue" class="fw-bold">-</span>
+                    </div>
+
+                    <hr>
+                    
+                    <div class="summary-row text-full-price">
+                        <span>Total Harga Paket:</span>
+                        <span id="summaryTotalFull">Rp 0</span>
+                    </div>
+
+                    <div class="summary-dp-row">
+                        <span>DP TRANSFER:</span>
+                        <span id="summaryTotalDP">Rp 0</span>
+                    </div>
+                </div>
+
+                <div class="bank-info">
+                    <strong>🏦 Rekening Pembayaran DP:</strong><br>
+                    BCA: 6140846421 (A.n Muhammad Fatichul Ichsan)<br>
+                    <small>Silakan transfer DP, lalu kirim bukti transfer ke WhatsApp admin.</small>
+                </div>
+
+                <div class="d-flex flex-column gap-2 mt-4">
+                    <button id="btnConfirmWA" class="btn btn-success rounded-pill fw-bold w-100 py-2" style="background:var(--wa-green); border:none;">
+                        Konfirmasi & Kirim WA
+                    </button>
+                    <button id="btnBackToForm" class="btn btn-link text-muted small">
+                        Kembali Edit Data
+                    </button>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -409,16 +507,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        /* LOGIC TIDAK DIUBAH, HANYA STYLE DALAM POSTER */
         const CONFIG = {
             apiURL: "https://script.google.com/macros/s/AKfycbwoQKn-H3UjntAj1onCpgsOFN1PPM3b71xAB1iS9ROfDmwKyL9gVg89MX8S8uTj_N3x/exec",
             saveURL: "https://script.google.com/macros/s/AKfycbywQBG9xMDjRshEg07HFuGDuHwyTIKHRJEmXSbxEqj8OU1PJIYnWUi63v72h14TaxzL/exec",
             maxSlot: 17,
-            waNumber: "62895400520827"
+            waNumber: "62895400520827",
+            pricePerPax: 300000,
+            dpPerPax: 50000,
+            shoePrice: 15000
         };
 
         let sheetsData = [];
         let currentSelectedDateISO = null;
+        let currentSelectedDateText = "";
         
         const els = {
             monthSelect: document.getElementById("monthSelect"),
@@ -431,8 +532,24 @@
             inputQty: document.getElementById("inputQty"),
             inputPhone: document.getElementById("inputPhone"),
             inputNote: document.getElementById("inputNote"),
+            // New Input Shoe
+            inputShoeQty: document.getElementById("inputShoeQty"),
+
+            // Elements for steps
+            stepForm: document.getElementById("stepForm"),
+            stepPayment: document.getElementById("stepPayment"),
+            btnGoToPayment: document.getElementById("btnGoToPayment"),
+            btnConfirmWA: document.getElementById("btnConfirmWA"),
+            btnBackToForm: document.getElementById("btnBackToForm"),
+            // Summary elements
+            summaryDate: document.getElementById("summaryDate"),
+            summaryPax: document.getElementById("summaryPax"),
+            summaryShoeRow: document.getElementById("summaryShoeRow"),
+            summaryShoeValue: document.getElementById("summaryShoeValue"),
+            summaryTotalFull: document.getElementById("summaryTotalFull"),
+            summaryTotalDP: document.getElementById("summaryTotalDP"),
+            
             btnCancel: document.getElementById("btnCancel"),
-            btnSend: document.getElementById("btnSend"),
             btnExport: document.getElementById("btnExport"),
             exportContainer: document.getElementById("exportPoster")
         };
@@ -528,43 +645,142 @@
             }
         }
 
-        /* 3. MODAL & WHATSAPP */
+        /* 3. MODAL LOGIC & PAYMENT */
         function openModal(isoDate, textDate) {
             currentSelectedDateISO = isoDate;
+            currentSelectedDateText = textDate;
+            
+            // Reset Form Fields
             els.modalDate.textContent = "📅 " + textDate;
-            els.inputName.value = ""; els.inputQty.value = 1; els.inputPhone.value = ""; els.inputNote.value = "";
+            els.inputName.value = ""; 
+            els.inputQty.value = 1; 
+            els.inputPhone.value = ""; 
+            els.inputNote.value = "";
+            els.inputShoeQty.value = 0; 
+
+            // Reset View to Step 1
+            els.stepForm.style.display = "block";
+            els.stepPayment.style.display = "none";
+
             els.modal.classList.add("show");
         }
+        
         function closeModal() { els.modal.classList.remove("show"); }
 
-        function sendBooking() {
+        function showPaymentSummary() {
+            // Validasi Input
+            const name = els.inputName.value.trim();
+            const qty = parseInt(els.inputQty.value) || 0;
+            const phone = els.inputPhone.value.trim();
+            const shoeQty = parseInt(els.inputShoeQty.value) || 0;
+
+            if(!name) { alert("Nama wajib diisi!"); return; }
+            if(qty < 1) { alert("Jumlah pax minimal 1"); return; }
+            if(!phone) { alert("Nomor WhatsApp wajib diisi!"); return; }
+
+            // Hitung Total Paket & Total DP
+            // Total Full = (Harga Trip * Qty) + (Harga Sepatu * QtySepatu)
+            const tripTotal = qty * CONFIG.pricePerPax;
+            const shoeTotal = shoeQty * CONFIG.shoePrice;
+            const totalFull = tripTotal + shoeTotal;
+            
+            // DP tetap dihitung dari jumlah Pax (tidak termasuk sepatu)
+            const totalDP = qty * CONFIG.dpPerPax;
+
+            const formatRupiah = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+
+            // Update UI Summary
+            els.summaryDate.textContent = currentSelectedDateText;
+            els.summaryPax.textContent = qty + " Orang";
+            
+            // Update Tampilan Sepatu
+            if(shoeQty > 0) {
+                els.summaryShoeRow.style.display = "flex";
+                els.summaryShoeValue.textContent = `${shoeQty} x Rp 15.000`;
+            } else {
+                els.summaryShoeRow.style.display = "none";
+            }
+
+            els.summaryTotalFull.textContent = formatRupiah(totalFull);
+            els.summaryTotalDP.textContent = formatRupiah(totalDP);
+
+            // Switch View
+            els.stepForm.style.display = "none";
+            els.stepPayment.style.display = "block";
+        }
+
+        function backToForm() {
+            els.stepPayment.style.display = "none";
+            els.stepForm.style.display = "block";
+        }
+
+        function confirmAndSendWA() {
             const name = els.inputName.value.trim();
             const qty = parseInt(els.inputQty.value) || 1;
             const phone = els.inputPhone.value.trim();
             const note = els.inputNote.value.trim();
-            if(!name) { alert("Nama wajib diisi!"); return; }
+            const shoeQty = parseInt(els.inputShoeQty.value) || 0;
+            
+            // Hitung Ulang untuk Link WA
+            const tripTotal = qty * CONFIG.pricePerPax;
+            const shoeTotal = shoeQty * CONFIG.shoePrice;
+            const totalFull = tripTotal + shoeTotal;
+            const totalDP = qty * CONFIG.dpPerPax;
+
+            const formatRupiah = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 
             const d = new Date(currentSelectedDateISO);
             const dateShort = d.toLocaleDateString("id-ID", { day:"numeric", month:"long", year:"numeric" });
-            let msg = `Halo Admin Canyoning Pacet, saya ingin booking Open Trip.\n\n Nama: ${name}\n Tanggal: ${dateShort}\n Jumlah: ${qty} Pax\n`;
-            if(phone) msg += ` No HP: ${phone}\n`;
-            if(note) msg += ` Catatan: ${note}\n`;
-            msg += `\nMohon konfirmasi ya. Terima kasih.`;
 
-            window.open(`https://wa.me/${CONFIG.waNumber}?text=${encodeURIComponent(msg)}`, "_blank");
+            // Format Pesan WhatsApp dengan Info DP dan Sepatu
+            let msg = `Halo Admin Canyoning Pacet, saya ingin konfirmasi booking .\n\n`;
+            msg += ` Nama: ${name}\n`;
+            msg += ` Tanggal: ${dateShort}\n`;
+            msg += ` Jumlah: ${qty} Pax\n`;
+            if(phone) msg += ` No HP: ${phone}\n`;
+
+            if(shoeQty > 0) {
+                msg += ` Sewa Sepatu: ${shoeQty} psg (Rp ${formatRupiah(shoeTotal)})\n`;
+            }
+            if(note) msg += ` Catatan: ${note}\n\n`;
+
+            msg += ` *Total Paket: ${formatRupiah(totalFull)}*\n`;
+            msg += ` *DP Transfer: ${formatRupiah(totalDP)}*\n\n`;
+
+            msg += ` *Rekening Transfer:*\n`;
+            msg += `BCA 6140846421\n`;
+            msg += `a.n Muhammad Fatichul Ichsan\n`;
             
+            
+            msg += `\nMohon dicek, saya akan kirim bukti transfer sebentar lagi. Terima kasih.`;
+
+            // Gabung info sepatu ke catatan agar tersimpan di Google Sheet
+            let finalNote = note;
+            if(shoeQty > 0) {
+                finalNote += ` [Sewa Sepatu: ${shoeQty} psg]`;
+            }
+
+            // Kirim Data ke Google Sheets
             fetch(CONFIG.saveURL, {
                 method: "POST",
-                body: JSON.stringify({ nama: name, nohp: phone, jumlah: qty, tanggal: dateShort, catatan: note })
+                body: JSON.stringify({ nama: name, nohp: phone, jumlah: qty, tanggal: dateShort, catatan: finalNote, total_bayar: totalFull })
             }).catch(e => console.log(e));
+
+            // Redirect ke WhatsApp
+            window.open(`https://wa.me/${CONFIG.waNumber}?text=${encodeURIComponent(msg)}`, "_blank");
+            
             closeModal();
         }
 
+        // Event Listeners for Buttons
         els.btnCancel.onclick = closeModal;
-        els.btnSend.onclick = sendBooking;
+        els.btnGoToPayment.onclick = showPaymentSummary; 
+        els.btnBackToForm.onclick = backToForm;         
+        els.btnConfirmWA.onclick = confirmAndSendWA;    
+        
         els.modal.onclick = (e) => { if(e.target === els.modal) closeModal(); };
 
-        /* 4. POSTER GENERATOR (UPDATED FONT STYLES) */
+        /* 4. POSTER GENERATOR */
         function createPosterHTML(sheetName) {
             const sheet = sheetsData.find(s => s.sheetName === sheetName);
             if(!sheet) return "";
@@ -587,7 +803,6 @@
                 return `<div class="row-item"><div class="row-date">${dateStr}</div><div class="row-slot"><span class="row-pill ${sisa > 0 ? '' : 'full'}">${text}</span></div></div>`;
             };
 
-            // Poster styles updated to use Oswald & Jakarta Sans
             return `
             <div class="poster">
                 <div class="text-center mb-4">
